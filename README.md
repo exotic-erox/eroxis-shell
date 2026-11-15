@@ -10,6 +10,37 @@ already have; it is not an operating system.
 > **Version 0.1.0**, the first public release. Something wrong or missing? Open an issue, and paste what
 > **Settings > About > Copy system info** gives you.
 
+<div align="center">
+
+### Preview
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="docs/Screenshots/bar.png">
+        <img src="docs/Screenshots/bar.png" width="260">
+      </a>
+      <br><b>Desktop Bar</b>
+    </td>
+    <td align="center">
+      <a href="docs/Screenshots/control.png">
+        <img src="docs/Screenshots/control.png" width="260">
+      </a>
+      <br><b>Control Center</b>
+    </td>
+    <td align="center">
+      <a href="docs/Screenshots/settings.png">
+        <img src="docs/Screenshots/settings.png" width="260">
+      </a>
+      <br><b>Settings</b>
+    </td>
+  </tr>
+</table>
+
+<sub>Click an image to view it in full resolution.</sub>
+
+</div>
+
 ## What you get
 
 - The bar and island, the control center (you choose which parts show and how wide it is), notifications, and the
