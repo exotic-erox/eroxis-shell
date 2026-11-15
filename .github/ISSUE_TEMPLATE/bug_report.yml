@@ -1,0 +1,33 @@
+name: Something is wrong
+description: The shell, the installer or the Hyprland configuration does not do what it should
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: system
+    attributes:
+      label: System info
+      description: In the app, Settings > About > Copy system info, then paste it here.
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: how
+    attributes:
+      label: How did you install it?
+      options:
+        - Permanent (./install.sh)
+        - With tapes (./install.sh --tape)
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: The log, if the shell did not start or crashed
+      description: "Output of: journalctl --user -u eroxis-shell -b --no-pager | tail -60"
+      render: text

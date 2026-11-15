@@ -1,0 +1,19 @@
+[Unit]
+Description=Eroxis shell (bar, island, notifications, lock; it picks the wallpaper eroxis-wallpaper shows)
+PartOf=graphical-session.target eroxis-session.target
+After=graphical-session.target
+Conflicts=quickshell.service
+ConditionEnvironment=WAYLAND_DISPLAY
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/qs -c eroxis
+Environment=QS_DISABLE_CRASH_HANDLER=1
+Environment=MALLOC_CONF=background_thread:true,dirty_decay_ms:1000,muzzy_decay_ms:0
+Environment=MALLOC_ARENA_MAX=2
+Environment=MALLOC_TRIM_THRESHOLD_=131072
+Restart=always
+RestartSec=1
+TimeoutStopSec=5
+Slice=session.slice

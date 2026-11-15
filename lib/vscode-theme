@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""vscode-theme CONFIG_HOME '{"key": value}' : set keys in VS Code / Code - OSS user settings.json, keeping comments."""
+import json, os, re, sys
+
+VALUE = r'("(?:[^"\\]|\\.)*"|true|false|null|-?\d+(?:\.\d+)?)'
+
+def match_brace(s, i):
+    depth, j = 0, i
+    while j < len(s):
+        c = s[j]
+        if c == '"':
+            j += 1
+            while s[j] != '"':
+                j += 2 if s[j] == "\\" else 1
+        elif c == "{": depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0: return j
+        j += 1
+    return -1
+
+def set_key(text, key, value):
+    val = json.dumps(value, indent=4).replace("\n", "\n    ")
+    m = re.search(r'("%s"\s*:\s*)' % re.escape(key), text)
+    if m:
+        start = m.end()
+        if isinstance(value, dict) and text[start:start + 1] == "{":
+            end = match_brace(text, start)
+            if end > 0: return text[:start] + val + text[end + 1:]
+        v = re.compile(VALUE).match(text, start)
+        if v and not isinstance(value, dict): return text[:start] + val + text[v.end():]
+    return text.replace("{", '{\n    %s: %s,' % (json.dumps(key), val), 1)
+
+def main():
+    if len(sys.argv) < 3:
+        sys.exit("vscode-theme CONFIG_HOME '{\"key\": value}'")
+    config, keys = sys.argv[1], json.loads(sys.argv[2])
+    for app in ("Code - OSS", "Code"):
+        folder = os.path.join(config, app, "User")
+        if not os.path.isdir(folder): continue
+        path = os.path.join(folder, "settings.json")
+        try: text = open(path).read()
+        except OSError: text = "{\n}\n"
+        new = text
+        for k, v in keys.items(): new = set_key(new, k, v)
+        if new != text: open(path, "w").write(new)
+
+if __name__ == "__main__":
+    main()

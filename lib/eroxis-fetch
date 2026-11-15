@@ -1,0 +1,15 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-3.0-or-later
+# eroxis-fetch: a system summary for a new terminal. In a big terminal the full one (the logo as a picture where the
+# terminal can show one); in a small one a few lines, so it does not fill the window.
+share=/usr/share/eroxis/fastfetch
+cols=$(tput cols 2>/dev/null || echo 80)
+rows=$(tput lines 2>/dev/null || echo 24)
+if [ "${EROXIS_FETCH:-}" = compact ] || [ "$cols" -lt 110 ] || [ "$rows" -lt 32 ]; then
+    exec fastfetch -c "$share/compact.jsonc"
+fi
+case "${TERM:-}" in
+    xterm-kitty) type=kitty ;;
+    *) if command -v chafa >/dev/null 2>&1; then type=chafa; else case "${TERM:-}" in foot*) type=sixel ;; *) type=auto ;; esac; fi ;;
+esac
+exec fastfetch -c "$share/full.jsonc" --logo-type "$type"

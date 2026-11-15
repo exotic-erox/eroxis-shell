@@ -1,0 +1,5 @@
+[Unit]
+Description=Eroxis session (started and stopped by Hyprland)
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target eroxis-shell.service eroxis-wallpaper.service eroxis-cliphist-text.service eroxis-cliphist-image.service
+After=graphical-session-pre.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=Eroxis wallpaper (awww: the picture, drawn without the GPU; the shell picks it, Backdrop.qml)
+PartOf=graphical-session.target eroxis-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+# --no-cache: do not bring back the wallpaper of the last session (another rice's) before the shell has set ours
+ExecStart=/bin/sh -c 'if awww-daemon --help 2>&1 | grep -q -- --no-cache; then exec awww-daemon --no-cache; else exec awww-daemon; fi'
+Restart=always
+RestartSec=1
+Slice=session.slice

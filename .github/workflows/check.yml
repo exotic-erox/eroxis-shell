@@ -1,0 +1,17 @@
+name: check
+on: [push, pull_request]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: sudo apt-get update && sudo apt-get install -y shellcheck lua5.4
+      - name: Installer and scripts
+        run: shellcheck -S warning install.sh lib/eroxis-fetch shell/scripts/*.sh
+      - name: Python
+        run: python3 -m py_compile lib/icon-theme lib/vscode-theme lib/kde-colors tools/*.py shell/scripts/*.py
+      - name: Hyprland configuration (syntax)
+        run: for f in dots/hypr/hyprland.lua dots/hypr/lib/*.lua; do lua5.4 -e "assert(loadfile('$f'))"; done
+      - name: Palettes
+        run: python3 tools/check-contrast.py

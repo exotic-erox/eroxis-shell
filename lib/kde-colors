@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""kde-colors KDEGLOBALS '{"Section": {"Key": "value"}}' : set keys in a KDE config file (kdeglobals), leaving the rest as it is.
+KDE apps such as Dolphin take their colors from there, not from Qt's palette."""
+import json, os, sys
+
+def apply(lines, sections):
+    out, cur = [], None
+    pending = {s: dict(kv) for s, kv in sections.items()}
+    def flush(section):
+        blanks = []
+        while out and not out[-1].strip(): blanks.append(out.pop())
+        for k, v in pending.pop(section, {}).items():
+            out.append("%s=%s" % (k, v))
+        out.extend(blanks)
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("[") and stripped.endswith("]"):
+            if cur is not None: flush(cur)
+            cur = stripped[1:-1]
+            out.append(line); continue
+        if cur in pending and "=" in line and not stripped.startswith("#"):
+            key = line.split("=", 1)[0].strip()
+            if key in pending[cur]:
+                out.append("%s=%s" % (key, pending[cur].pop(key))); continue
+        out.append(line)
+    if cur is not None: flush(cur)
+    for section in list(pending):
+        if out and out[-1].strip(): out.append("")
+        out.append("[%s]" % section); flush(section)
+    return out
+
+def main():
+    if len(sys.argv) != 3: sys.exit(__doc__)
+    path, sections = sys.argv[1], json.loads(sys.argv[2])
+    try: lines = open(path).read().split("\n")
+    except OSError: lines = []
+    if lines and lines[-1] == "": lines.pop()
+    new = "\n".join(apply(lines, sections)) + "\n"
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    if not os.path.exists(path) or open(path).read() != new:
+        open(path, "w").write(new)
+
+if __name__ == "__main__":
+    main()

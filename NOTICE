@@ -1,0 +1,19 @@
+Eroxis Shell
+Copyright (C) 2026 exotic-erox and the Eroxis Shell contributors
+
+Eroxis Shell is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+version. It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the file LICENSE for the full text.
+
+This is a modified version of the shell of Vyntaris (https://github.com/vyntaris/vyntaris), which is free software
+under the GNU General Public License, version 3 or any later version. It was modified in 2026 by exotic-erox:
+
+  - the operating-system parts were removed (installer image, boot splash, login screen, backups, driver and update
+    management, the phone link, the password manager, game mode), and it was renamed Eroxis Shell
+  - the colors were changed to a black-and-white palette; the wallpapers and the emblem were replaced
+  - an installer for existing Arch-based systems was added, and a way to install it next to another setup with tapes
+  - added: workspaces beyond nine, a settings page for the keyboard shortcuts, control center options, a fuller About
+    page, theme support for KDE applications, and a system summary for terminals
+
+Third-party components and their licenses are listed in THIRD-PARTY.md.
