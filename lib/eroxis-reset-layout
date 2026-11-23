@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""eroxis-reset-layout: put the control center back to the classic layout and restart the shell.
+Use it if a custom control center ever misbehaves and you cannot reach Settings."""
+import json, os, subprocess, sys
+
+path = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config"), "quickshell", "settings.json")
+try:
+    with open(path) as f:
+        data = json.load(f)
+except FileNotFoundError:
+    print("No settings file yet, nothing to reset.")
+    sys.exit(0)
+except ValueError:
+    sys.exit("The settings file (%s) is not valid JSON; fix it or delete it." % path)
+
+control = data.get("control")
+if isinstance(control, dict):
+    for key in ("custom", "sections", "tiles"):
+        control.pop(key, None)
+    control["custom"] = False
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+    print("The control center is back to the classic layout.")
+else:
+    print("Nothing to reset.")
+
+subprocess.run(["systemctl", "--user", "restart", "eroxis-shell.service"], check=False)

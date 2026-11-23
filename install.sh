@@ -215,7 +215,7 @@ install_system_files() {
     lib="$(sys /usr/lib/eroxis)"; usr="$(sys /usr/share/eroxis)"; bg="$(sys /usr/share/backgrounds/eroxis)"
     bin="$(sys /usr/local/bin)"; icons="$(sys /usr/share/icons/hicolor/scalable/apps)"
     as_root install -d "$lib" "$usr/fastfetch" "$bg" "$bin" "$icons"
-    as_root install -m755 "$REPO/lib/icon-theme" "$REPO/lib/vscode-theme" "$REPO/lib/kde-colors" "$REPO/lib/eroxis-fetch" "$lib/"
+    as_root install -m755 "$REPO/lib/icon-theme" "$REPO/lib/vscode-theme" "$REPO/lib/kde-colors" "$REPO/lib/eroxis-fetch" "$REPO/lib/eroxis-reset-layout" "$lib/"
     as_root install -m644 "$REPO/dots/kitty.conf" "$usr/kitty.conf"
     as_root install -m644 "$REPO/assets/fastfetch-logo.png" "$usr/fastfetch/logo.png"
     as_root install -m644 "$REPO/dots/fastfetch/config.jsonc" "$usr/fastfetch/full.jsonc"
@@ -224,6 +224,7 @@ install_system_files() {
     as_root install -m644 "$REPO/assets/eroxis-logo.svg" "$icons/eroxis.svg"
     as_root ln -sf "$CONFIG/quickshell/eroxis/scripts/app.sh" "$bin/eroxis-app"
     as_root ln -sf "${lib#"$SYSROOT"}/eroxis-fetch" "$bin/eroxis-fetch"
+    as_root ln -sf "${lib#"$SYSROOT"}/eroxis-reset-layout" "$bin/eroxis-reset-layout"
 }
 
 install_user_files() {

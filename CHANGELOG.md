@@ -1,5 +1,17 @@
 # Changes
 
+## 0.1.1
+
+- Battery: the time remaining now shows as soon as you open the battery panel (it used to wait ten seconds, or stay on
+  "Estimating…"), and uses the system's own estimate when the battery does not report its power draw (#1)
+- Control center: a **Custom layout** (beta) in Settings > Control center. Put its parts in your own order, switch them on and
+  off, and choose from 16 tiles (new: Do not disturb, Airplane mode, Dark mode, Power mode, Screenshot, Color picker,
+  Clipboard, Timer, Wallpapers, Lock) and 3 more parts (Clock, Greeting, Emblem). Classic stays the default and works as before;
+  if the custom layout ever fails to load, the classic one is shown. `eroxis-reset-layout` puts everything back from a terminal.
+- Wallpaper: it puts itself back if the wallpaper service restarts (it used to stay blank), and the picker lists the
+  Contours wallpaper and no longer carries an old name for the first one
+- Battery: the cycle count shows "—" instead of 0 when the laptop does not report it (#1)
+
 ## 0.1.0 (first public release)
 
 - The black-and-white Eroxis Shell for Hyprland on Arch-based systems (Arch, CachyOS and others), built on the shell of Vyntaris

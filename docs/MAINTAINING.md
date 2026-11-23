@@ -36,6 +36,12 @@ Hyprland
 configuration belong to the test user only.) Remove the user with `sudo userdel -r eroxistest` when you are done.
 A virtual machine with a fresh Arch or CachyOS install works as well, and tests the whole thing from nothing.
 
+**Automatic checks before a release.** `python3 tools/qtest/run_all.py` loads the control center in a headless Qt runtime
+in all its layouts (classic, custom, wrong saved settings, a custom file that cannot load) and fails if the size is not
+finite and stable. It needs `qmltestrunner` and the Qt 6 QML modules (on Debian or Ubuntu: `qt6-declarative-dev-tools`,
+`qml6-module-qtquick`, `qml6-module-qtquick-layouts`, `qml6-module-qttest`). `node tools/qtest/test_layout.js` tests the
+layout helpers. These use stand-ins for Quickshell, so they catch loading and layout problems, not everything.
+
 **Worth checking before every release:** the bar and island open and close; the control center, its settings, and the
 launcher; the lock screen (have a TTY ready: `loginctl unlock-session`); Settings > Shortcuts; Settings > About;
 switching workspaces by holding `SUPER` and scrolling; `./install.sh --uninstall` and a second install.

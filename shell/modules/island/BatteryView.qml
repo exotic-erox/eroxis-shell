@@ -118,7 +118,7 @@ Item {
             Label {
                 mono: true
                 font.pixelSize: Theme.fontSizeLabel
-                text: root.b.cycles >= 0 ? root.b.cycles : "—"
+                text: root.b.cycles > 0 ? root.b.cycles : "—"   // 0: the battery does not report it
             }
         }
 

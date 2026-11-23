@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Io
 import QtQuick
 import qs.config
 import "../../config/Wallpapers.js" as Walls
@@ -18,10 +19,17 @@ Scope {
     Component.onCompleted: show()
     Timer { id: showSoon; interval: 40; onTriggered: root.show() }
 
-    function show() {
+    // The wallpaper service asks for this after it (re)starts: it has no picture then (it does not keep one between runs, so
+    // that another desktop's wallpaper never shows first), and the shell puts ours back at once.
+    IpcHandler {
+        target: "backdrop"
+        function reapply(): void { root.show(true); }
+    }
+
+    function show(instant) {
         if (waiting) return;
         const timed = Walls.isDynamic(Config.wallpaperPath);
-        const ms = !started ? 0 : timed ? 3000 : Theme.duration(950);
+        const ms = instant || !started ? 0 : timed ? 3000 : Theme.duration(950);
         started = true;
         Quickshell.execDetached(["sh", "-c",
             'for i in $(seq 40); do awww query >/dev/null 2>&1 && break; sleep 0.25; done; f="$1"; [ -r "$f" ] || f="$2"; '

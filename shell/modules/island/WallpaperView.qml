@@ -22,7 +22,7 @@ Item {
     function rebuild() {
         const paths = [];
         for (let k = 0; k < files.count; k++) paths.push(files.get(k, "filePath"));
-        entries = [{ path: Config.defaultWallpaper, title: "Floating Cubes" }]
+        entries = [{ path: Config.defaultWallpaper, title: "Ring" }, { path: "/usr/share/backgrounds/eroxis/contour.jpg", title: "Contours" }]
             .concat(Walls.group(paths, Theme.isDark).map(e => ({ path: e.path, title: e.title })));
         showCurrent();
     }

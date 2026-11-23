@@ -14,7 +14,10 @@ import qs.services
 Item {
     id: root
     readonly property real fullWidth: Config.control.width
-    readonly property real hang: content.implicitHeight + 26
+    // With Settings > Control center > Layout on Custom, ControlCustom.qml is shown instead of the classic panel below. If it
+    // cannot be loaded, this stays false and the classic panel is shown, as always.
+    readonly property bool custom: Config.control.custom && customLoader.status === Loader.Ready && customLoader.item !== null
+    readonly property real hang: (custom ? customLoader.item.implicitHeight : content.implicitHeight) + 26
     readonly property bool active: Panels.controlOpen
 
     width: fullWidth
@@ -46,8 +49,17 @@ Item {
         HeaderButton { icon: "power"; label: Tr.t("Power"); onClicked: Panels.powerOpen = true }
     }
 
+    Loader {
+        id: customLoader
+        anchors.fill: parent
+        active: Config.control.custom
+        source: "ControlCustom.qml"
+        onStatusChanged: if (status === Loader.Error) console.warn("Eroxis: the custom control center could not be loaded, showing the classic one")
+    }
+
     PanelBody {
         id: content
+        visible: !root.custom
         spacing: Theme.space10
 
         Rectangle {

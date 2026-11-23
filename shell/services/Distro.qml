@@ -8,7 +8,7 @@ Singleton {
 
     // This shell.
     readonly property string name: "Eroxis"
-    readonly property string version: "0.1.0"
+    readonly property string version: "0.1.1"
     readonly property string glyph: "eroxis"
     readonly property string label: name + " V." + version
 

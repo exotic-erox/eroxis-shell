@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "Wallpapers.js" as Walls
+import "ControlLayout.js" as ControlLayout
 
 Singleton {
     id: root
@@ -111,6 +112,28 @@ Singleton {
     function controlToggle(id, shown) {
         const rest = control.hidden.filter(x => x !== id);
         control.hidden = shown ? rest : rest.concat([id]);
+        saveSoon();
+    }
+
+    // The custom layout. ControlLayout.js drops anything it does not know, so a wrong saved list cannot break the panel.
+    readonly property var controlSections: ControlLayout.clean(control.sections, ControlLayout.sections, ControlLayout.defaultSections)
+    readonly property var controlTiles: ControlLayout.clean(control.tiles, ControlLayout.tiles, ControlLayout.defaultTiles)
+    function controlMove(list, id, step) {
+        if (list === "tiles") control.tiles = ControlLayout.join(ControlLayout.move(controlTiles, id, step));
+        else control.sections = ControlLayout.join(ControlLayout.move(controlSections, id, step));
+        saveSoon();
+    }
+    function controlSet(list, id, shown) {
+        if (list === "tiles") control.tiles = ControlLayout.join(ControlLayout.setShown(controlTiles, id, shown));
+        else control.sections = ControlLayout.join(ControlLayout.setShown(controlSections, id, shown));
+        saveSoon();
+    }
+    function controlReset() {
+        control.custom = false;
+        control.width = 480;
+        control.hidden = [];
+        control.sections = ControlLayout.join(ControlLayout.defaultSections);
+        control.tiles = ControlLayout.join(ControlLayout.defaultTiles);
         saveSoon();
     }
 
@@ -356,9 +379,14 @@ Singleton {
 
             // What the control center leaves out (by name: media, wifi, bluetooth, night, awake, mic, vpn, sliders, stats,
             // calendar, notifications), and how wide it is.
+            // The control center. `hidden` is what the classic layout leaves out. With `custom` on, `sections` and `tiles` say what
+            // it is made of and in what order (names as in ControlLayout.js).
             property JsonObject control: JsonObject {
                 property int width: 480
                 property var hidden: []
+                property bool custom: false
+                property string sections: "media,tiles,sliders,stats,calendar,notifications"
+                property string tiles: "wifi,bluetooth,night,awake,mic,vpn"
             }
             property JsonObject power: JsonObject {
                 property string lock: "loginctl lock-session"

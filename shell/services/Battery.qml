@@ -27,9 +27,14 @@ Singleton {
     property string model: ""
 
     readonly property real health: energyDesign > 0 ? energyFull / energyDesign : -1
-    readonly property real hoursLeft: power <= 0.1 ? -1
-        : charging ? Math.max(0, energyFull - energyNow) / power
-        : energyNow / power
+    // The power draw comes from the battery's own files; some laptops report 0 there, so UPower's figure stands in.
+    readonly property real drawNow: power > 0.1 ? power : Math.abs(Number(device?.changeRate) || 0)
+    readonly property real hoursFromDraw: drawNow <= 0.1 ? -1
+        : charging ? Math.max(0, energyFull - energyNow) / drawNow
+        : energyNow / drawNow
+    // And UPower's own estimate, in seconds, when the draw is not known either.
+    readonly property real hoursFromUpower: (Number(charging ? device?.timeToFull : device?.timeToEmpty) || 0) / 3600
+    readonly property real hoursLeft: hoursFromDraw > 0 ? hoursFromDraw : hoursFromUpower > 0 ? hoursFromUpower : -1
 
     Process {
         running: true
@@ -87,11 +92,18 @@ Singleton {
         later.restart();
     }
     Timer { id: later; interval: 800; onTriggered: root.refresh() }
+    // At once when the panel opens (not ten seconds later), then every ten seconds while it is open.
     Timer {
         interval: 10000
         running: root.available && Panels.batteryOpen
         repeat: true
+        triggeredOnStart: true
         onTriggered: reader.running = true
+    }
+    // Plugging in or out changes everything, so read again.
+    Connections {
+        target: root.device
+        function onStateChanged() { later.restart(); }
     }
 
     function refresh() {
